@@ -1,0 +1,3 @@
+aws-cdk.core==1.80.0
+pyyaml
+aws-cdk-test-synth

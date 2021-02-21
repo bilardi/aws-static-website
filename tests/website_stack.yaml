@@ -1,0 +1,30 @@
+Resources:
+  testBucket:
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: PublicRead
+      BucketName: bucket.domain.name
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Retain
+  testPolicy:
+    Properties:
+      Bucket:
+        Ref: testBucket
+      PolicyDocument:
+        Statement:
+        - Action: s3:GetObject
+          Effect: Allow
+          Principal: '*'
+          Resource:
+            Fn::Join:
+            - ''
+            - - Fn::GetAtt:
+                - testBucket
+                - Arn
+              - /*
+        Version: '2012-10-17'
+    Type: AWS::S3::BucketPolicy
+

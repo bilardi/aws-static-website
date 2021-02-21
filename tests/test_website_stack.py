@@ -14,8 +14,6 @@ class TestWebsiteStack(TestSynth):
                 "index_document": "index.html",
                 "error_document": "index.html"
             },
-            aliases=["bucket.domain.name"],
-            acm_certificate_arn="",
             hosted_params={
                 "zone_name": "domain.name"
             }
@@ -29,8 +27,6 @@ class TestWebsiteStack(TestSynth):
                 "index_document": "index.html",
                 "error_document": "index.html"
             },
-            aliases=["bucket.domain.name"],
-            acm_certificate_arn="",
             hosted_params={
                 "zone_name": "domain.name",
                 "zone_id": "Z2FDTNDATAQYW2"
@@ -44,9 +40,7 @@ class TestWebsiteStack(TestSynth):
             website_params={
                 "index_document": "index.html",
                 "error_document": "index.html"
-            },
-            aliases=["bucket.domain.name"],
-            acm_certificate_arn=""
+            }
         )
 
     def test_synth_with_zone_id(self):

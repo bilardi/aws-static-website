@@ -37,7 +37,7 @@ from aws_cdk import (core, aws_s3 as s3, aws_iam as iam,
 
 class WebsiteStack(core.Stack):
 
-    def __init__(self, scope: core.Construct, id: str, *, bucket_name: str=None, aliases: list=None, hosted_params: dict=None, acm_certificate_arn: str=None, website_params: dict=None, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, id: str, *, bucket_name: str=None, website_params: dict=None, hosted_params: dict=None, **kwargs) -> None:
         """
         deploys all AWS resources for your static website
             Resources:
@@ -80,11 +80,7 @@ class WebsiteStack(core.Stack):
                     s3_bucket_source=website_bucket
                 ),
                 behaviors=[cloudfront.Behavior(is_default_behavior=True)]
-            )],
-            alias_configuration=cloudfront.AliasConfiguration(
-                acm_cert_ref=acm_certificate_arn,
-                names=aliases
-            )
+            )]
         )
 
         hosted_zone = None

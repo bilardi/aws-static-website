@@ -12,8 +12,6 @@ Resources:
   testDistributionCFDistribution:
     Properties:
       DistributionConfig:
-        Aliases:
-        - bucket.domain.name
         DefaultCacheBehavior:
           AllowedMethods:
           - GET
@@ -43,8 +41,7 @@ Resources:
           S3OriginConfig: {}
         PriceClass: PriceClass_100
         ViewerCertificate:
-          AcmCertificateArn: ''
-          SslSupportMethod: sni-only
+          CloudFrontDefaultCertificate: {}
     Type: AWS::CloudFront::Distribution
   testHosted:
     Properties:

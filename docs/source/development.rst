@@ -45,4 +45,4 @@ You can destroy the resources with a simple command
     export STAGE=my-development
     cdk destroy '*' -c stage=${STAGE}
 
-If you want to see other sample of AWS CDK commands, you can see the repository named `aws-tool-comparison <https://github.com/bilardi/aws-tool-comparison>`_ or its `documentation <https://aws-tool-comparison.readthedocs.io/en/latest/cdk.html>`_.
+If you want to see other sample of AWS CDK commands, you can see the repository named `aws-static-gui-resources <https://github.com/bilardi/aws-static-gui-resources>`_ or its `documentation <https://aws-static-gui-resources.readthedocs.io/en/latest/cdk.html>`_.

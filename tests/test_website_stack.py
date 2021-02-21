@@ -17,10 +17,29 @@ class TestWebsiteStack(TestSynth):
             aliases=["bucket.domain.name"],
             acm_certificate_arn="",
             hosted_params={
-                "zone_name": "domain.name",
-#                "zone_id": "Z2FDTNDATAQYW2"
+                "zone_name": "domain.name"
             }
         )
+
+    def synth_with_zone_id(self, app):
+        WebsiteStack(app, 
+            id="test",
+            bucket_name="bucket.domain.name",
+            website_params={
+                "index_document": "index.html",
+                "error_document": "index.html"
+            },
+            aliases=["bucket.domain.name"],
+            acm_certificate_arn="",
+            hosted_params={
+                "zone_name": "domain.name",
+                "zone_id": "Z2FDTNDATAQYW2"
+            }
+        )
+
+    def test_synth_with_zone_id(self):
+        self.load_template('tests/website_stack_with_zone_id.yaml')
+        self.synthesizes('synth_with_zone_id')
 
 if __name__ == '__main__':
     unittest.main()

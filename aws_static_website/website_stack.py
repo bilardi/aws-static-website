@@ -32,7 +32,8 @@ Here's an example:
 # support https://github.com/bilardi/aws-static-website/issues
 """
 from aws_cdk import (core, aws_s3 as s3, aws_iam as iam,
-                     aws_cloudfront as cloudfront)
+                     aws_cloudfront as cloudfront,
+                     aws_route53 as route53)
 
 class WebsiteStack(core.Stack):
 
@@ -43,6 +44,7 @@ class WebsiteStack(core.Stack):
                 AWS::S3::Bucket for your website
                 AWS::S3::BucketPolicy with read-only policy
                 AWS::CloudFront::Distribution with bucket like origin
+                AWS::Route53::HostedZone if you pass only zone_name and not zone_id
         """
         super().__init__(scope, id, **kwargs)
 
@@ -83,3 +85,9 @@ class WebsiteStack(core.Stack):
                 names=aliases
             )
         )
+
+        hosted_zone = None
+        if "zone_id" not in hosted_params:
+            hosted_zone = route53.HostedZone(self, id+"Hosted",
+                zone_name=hosted_params['zone_name']
+            )

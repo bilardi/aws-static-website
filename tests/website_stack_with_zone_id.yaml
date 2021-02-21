@@ -46,10 +46,6 @@ Resources:
           AcmCertificateArn: ''
           SslSupportMethod: sni-only
     Type: AWS::CloudFront::Distribution
-  testHosted:
-    Properties:
-      Name: domain.name.
-    Type: AWS::Route53::HostedZone
   testPolicy:
     Properties:
       Bucket:

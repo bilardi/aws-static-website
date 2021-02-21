@@ -64,4 +64,21 @@ Resources:
               - /*
         Version: '2012-10-17'
     Type: AWS::S3::BucketPolicy
+  testRecord:
+    Properties:
+      HostedZoneName: domain.name.
+      RecordSets:
+      - AliasTarget:
+          DNSName:
+            Fn::GetAtt:
+            - testDistributionCFDistribution
+            - DomainName
+          HostedZoneId: Z2FDTN
+        Name:
+          Fn::Join:
+          - ''
+          - - Ref: testBucket
+            - .
+        Type: A
+    Type: AWS::Route53::RecordSetGroup
 

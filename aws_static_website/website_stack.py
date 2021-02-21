@@ -45,6 +45,7 @@ class WebsiteStack(core.Stack):
                 AWS::S3::BucketPolicy with read-only policy
                 AWS::CloudFront::Distribution with bucket like origin
                 AWS::Route53::HostedZone if you pass only zone_name and not zone_id
+                AWS::Route53::RecordSetGroup with name the bucket and target the distribution
         """
         super().__init__(scope, id, **kwargs)
 
@@ -87,7 +88,22 @@ class WebsiteStack(core.Stack):
         )
 
         hosted_zone = None
-        if "zone_id" not in hosted_params:
+        if hosted_params and "zone_id" not in hosted_params:
             hosted_zone = route53.HostedZone(self, id+"Hosted",
                 zone_name=hosted_params['zone_name']
+            )
+            hosted_params['zone_id'] = hosted_zone.hosted_zone_id
+
+        dns_record = None
+        if hosted_params and "zone_name" in hosted_params:
+            dns_record = route53.CfnRecordSetGroup(self, id+"Record",
+                hosted_zone_name=hosted_params['zone_name']+".",
+                record_sets=[route53.CfnRecordSetGroup.RecordSetProperty(
+                    name=website_bucket.bucket_name+".",
+                    type="A",
+                    alias_target=route53.CfnRecordSetGroup.AliasTargetProperty(
+                        dns_name=distribution.distribution_domain_name,
+                        hosted_zone_id=hosted_params['zone_id']
+                    )
+                )]
             )

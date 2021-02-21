@@ -9,6 +9,43 @@ Resources:
         IndexDocument: index.html
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain
+  testDistributionCFDistribution:
+    Properties:
+      DistributionConfig:
+        Aliases:
+        - bucket.domain.name
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - GET
+          - HEAD
+          CachedMethods:
+          - GET
+          - HEAD
+          Compress: {}
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            QueryString: {}
+          TargetOriginId: origin1
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: {}
+        HttpVersion: http2
+        IPV6Enabled: {}
+        Origins:
+        - ConnectionAttempts: {}
+          ConnectionTimeout: {}
+          DomainName:
+            Fn::GetAtt:
+            - testBucket
+            - RegionalDomainName
+          Id: origin1
+          S3OriginConfig: {}
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn: ''
+          SslSupportMethod: sni-only
+    Type: AWS::CloudFront::Distribution
   testPolicy:
     Properties:
       Bucket:

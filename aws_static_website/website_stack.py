@@ -31,7 +31,8 @@ Here's an example:
 # license MIT
 # support https://github.com/bilardi/aws-static-website/issues
 """
-from aws_cdk import (core, aws_s3 as s3, aws_iam as iam)
+from aws_cdk import (core, aws_s3 as s3, aws_iam as iam,
+                     aws_cloudfront as cloudfront)
 
 class WebsiteStack(core.Stack):
 
@@ -41,6 +42,7 @@ class WebsiteStack(core.Stack):
             Resources:
                 AWS::S3::Bucket for your website
                 AWS::S3::BucketPolicy with read-only policy
+                AWS::CloudFront::Distribution with bucket like origin
         """
         super().__init__(scope, id, **kwargs)
 
@@ -67,4 +69,17 @@ class WebsiteStack(core.Stack):
         bucket_policy = s3.CfnBucketPolicy(self, id+"Policy",
             bucket=website_bucket.bucket_name,
             policy_document=policy_document
+        )
+
+        distribution = cloudfront.CloudFrontWebDistribution(self, id+"Distribution",
+            origin_configs=[cloudfront.SourceConfiguration(
+                s3_origin_source=cloudfront.S3OriginConfig(
+                    s3_bucket_source=website_bucket
+                ),
+                behaviors=[cloudfront.Behavior(is_default_behavior=True)]
+            )],
+            alias_configuration=cloudfront.AliasConfiguration(
+                acm_cert_ref=acm_certificate_arn,
+                names=aliases
+            )
         )

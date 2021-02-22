@@ -6,13 +6,11 @@ The class requires the follow properties:
     'website_params' (dict): the dictionary of the Website custom parameters
         'index_document' (str): the index file name
         'error_document' (str): the error file name
-    'aliases' (list): the list of domain names
-    'acm_certificate_arn' (str): the arn of ACM certificate
     'hosted_params' 
         'zone_name' (str): the hosted zone name
         'zone_id' (str): the hosted zone identifier
 
-All properties are mandatory, except zone_id if you need to create a new Host Zone.
+All properties are mandatory, except hosted_params if you need to create a new Host Zone and/or DNS Record.
 Here's an example:
 
     >>> from aws_cdk import core
@@ -22,8 +20,6 @@ Here's an example:
     >>>     id="aws-static-website",
     >>>     bucket_name="bucket.domain.name",
     >>>     website_params=website_params,
-    >>>     aliases=["bucket.domain.name"],
-    >>>     acm_certificate_arn="",
     >>>     hosted_params=hosted_params
     >>> )
     >>> app.synth()

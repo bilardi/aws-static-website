@@ -16,5 +16,5 @@ It extended the core.Stack class of aws_cdk package.
 # license MIT
 # support https://github.com/bilardi/aws-static-website/issues
 """
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __author__ = 'Alessandra Bilardi'

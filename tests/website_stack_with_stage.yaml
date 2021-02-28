@@ -1,0 +1,86 @@
+Resources:
+  testBucket:
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: PublicRead
+      BucketName: sample-bucket.domain.name
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Retain
+  testDistributionCFDistribution:
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - GET
+          - HEAD
+          CachedMethods:
+          - GET
+          - HEAD
+          Compress: {}
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            QueryString: {}
+          TargetOriginId: origin1
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: {}
+        HttpVersion: http2
+        IPV6Enabled: {}
+        Origins:
+        - ConnectionAttempts: {}
+          ConnectionTimeout: {}
+          DomainName:
+            Fn::GetAtt:
+            - testBucket
+            - RegionalDomainName
+          Id: origin1
+          S3OriginConfig: {}
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: {}
+    Type: AWS::CloudFront::Distribution
+  testHosted:
+    Properties:
+      Name: domain.name.
+    Type: AWS::Route53::HostedZone
+  testPolicy:
+    Properties:
+      Bucket:
+        Ref: testBucket
+      PolicyDocument:
+        Statement:
+        - Action: s3:GetObject
+          Effect: Allow
+          Principal: '*'
+          Resource:
+            Fn::Join:
+            - ''
+            - - Fn::GetAtt:
+                - testBucket
+                - Arn
+              - /*
+        Version: '2012-10-17'
+    Type: AWS::S3::BucketPolicy
+  testRecord:
+    Properties:
+      HostedZoneName: domain.name.
+      RecordSets:
+      - AliasTarget:
+          DNSName:
+            Fn::GetAtt:
+            - testDistributionCFDistribution
+            - DomainName
+          HostedZoneId:
+            Ref: testHosted
+        Name:
+          Fn::Join:
+          - ''
+          - - Ref: testBucket
+            - .
+        Type: A
+    Type: AWS::Route53::RecordSetGroup
+

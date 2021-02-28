@@ -43,6 +43,20 @@ class TestWebsiteStack(TestSynth):
             }
         )
 
+    def synth_with_stage(self, app):
+        WebsiteStack(app, 
+            id="test",
+            stage="sample",
+            bucket_name="bucket.domain.name",
+            website_params={
+                "index_document": "index.html",
+                "error_document": "index.html"
+            },
+            hosted_params={
+                "zone_name": "domain.name"
+            }
+        )
+
     def test_synth_with_zone_id(self):
         self.load_template('tests/website_stack_with_zone_id.yaml')
         self.synthesizes('synth_with_zone_id')
@@ -50,6 +64,10 @@ class TestWebsiteStack(TestSynth):
     def test_synth_without_hosted_zone(self):
         self.load_template('tests/website_stack_without_hosted_zone.yaml')
         self.synthesizes('synth_without_hosted_zone')
+
+    def test_synth_with_stage(self):
+        self.load_template('tests/website_stack_with_stage.yaml')
+        self.synthesizes('synth_with_stage')
 
 if __name__ == '__main__':
     unittest.main()

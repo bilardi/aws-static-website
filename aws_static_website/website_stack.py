@@ -2,6 +2,7 @@
 
 The class requires the follow properties:
     'id' (str): the name of project used for the prefix of the stack name
+    'stage' (str): the name of the environment, default is empty
     'bucket_name' (str): the name of bucket and domain
     'website_params' (dict): the dictionary of the Website custom parameters
         'index_document' (str): the index file name
@@ -10,7 +11,7 @@ The class requires the follow properties:
         'zone_name' (str): the hosted zone name
         'zone_id' (str): the hosted zone identifier
 
-All properties are mandatory, except hosted_params if you need to create a new Host Zone and/or DNS Record.
+All properties are mandatory, except stage and hosted_params if you need to create a new Host Zone and/or DNS Record.
 Here's an example:
 
     >>> from aws_cdk import core
@@ -18,6 +19,7 @@ Here's an example:
     >>> app = core.App()
     >>> WebsiteStack(app,
     >>>     id="aws-static-website",
+    >>>     stage="sample",
     >>>     bucket_name="bucket.domain.name",
     >>>     website_params=website_params,
     >>>     hosted_params=hosted_params
@@ -33,7 +35,7 @@ from aws_cdk import (core, aws_s3 as s3, aws_iam as iam,
 
 class WebsiteStack(core.Stack):
 
-    def __init__(self, scope: core.Construct, id: str, *, bucket_name: str=None, website_params: dict=None, hosted_params: dict=None, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, id: str, *, stage: str='', bucket_name: str=None, website_params: dict=None, hosted_params: dict=None, **kwargs) -> None:
         """
         deploys all AWS resources for your static website
             Resources:
@@ -45,9 +47,10 @@ class WebsiteStack(core.Stack):
         """
         super().__init__(scope, id, **kwargs)
 
-        stage = ''
         if scope.node.try_get_context("stage"):
-            stage = scope.node.try_get_context("stage") + '-'
+            stage = scope.node.try_get_context("stage")
+        if stage:
+            stage = stage + '-'
 
         website_bucket = s3.Bucket(self, id+"Bucket",
             bucket_name=stage+bucket_name,
